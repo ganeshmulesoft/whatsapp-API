@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="webhookFlow" doc:id="3f49099f-cea0-46c9-90c7-a87eba225c2c" >
+		<http:listener doc:name="Listener" doc:id="3fffd219-febf-444a-9904-1c892d4c9509" config-ref="HTTP_Listener_config" path="/webhook"/>
+		<logger level="INFO" doc:name="Logger" doc:id="d9a217ba-7164-4368-9184-884209936f2c" />
+	</flow>
+</mule>

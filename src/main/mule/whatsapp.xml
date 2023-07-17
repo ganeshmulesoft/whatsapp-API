@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="3164f69c-3fe4-4318-9f46-1a18a70a393a" >
+		<http:listener-connection host="0.0.0.0" port="8081">
+		</http:listener-connection>
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="f6113384-5ce3-4974-86fe-3a0a2dacebef" >
+		<http:request-connection host="graph.facebook.com" protocol="HTTPS"/>
+		<http:default-headers >
+			<http:default-header key="Authorization" value="Bearer EAAOX9IPW9ZAMBAEgdoxZCDDjKfM29nN2Ota7FPB6C8FrJEQeZCXg89RPC0xZBHbblqV3s0XSjUursRFSDZCuzh6wQFI5lx60dcnNKwcoLZBmN36WVUekUjenOLCUaGRSKbgcgBPHLp619gonqGKOF6rEq0Axrvmw9zEKNaut9yy4PAT6GjTOZAoIMNLiYcOIBac7fZBmLU6hKwZDZD" />
+		</http:default-headers>
+	</http:request-config>
+	<tls:context name="TLS_Context" doc:name="TLS Context" doc:id="f6a8f759-45e8-4f4c-ba2a-d39678f64edf" >
+		<tls:key-store type="jks" path="jks.cert" keyPassword="Mulesoft@123" password="Mulesoft@123" />
+	</tls:context>
+	<flow name="whatsappFlow" doc:id="6347c355-6b8c-4240-90f5-c51515a0f8b9" >
+		<http:listener doc:name="Listener" doc:id="7f0c7216-a2b7-4fda-9255-8f0da7e6e9f4" config-ref="HTTP_Listener_config" path="/whatsapp"/>
+		<logger level="INFO" doc:name="Start Logger" doc:id="2e58aaff-aded-4eff-9b99-8dbe26dae628" message="#[payload]"/>
+		<ee:transform doc:name="WhatsApp API Transform Message" doc:id="16e50e53-bd94-42ab-85c1-603fed276e71" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+"messaging_product": "whatsapp",
+"to": "917993113713",
+"type": "template",
+"template": {
+"name": "hello_world ",
+"language": {
+"code": "en_US"
+}
+}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<http:request method="POST" doc:name="WhatsApp cloud API Request" doc:id="ab225e2e-8ec7-46b0-af96-628de90a5f31" config-ref="HTTP_Request_configuration" path="/v17.0/107643705732146/messages"/>
+		<logger level="INFO" doc:name="End Logger" doc:id="36f0fc8f-be2e-41b2-b0bd-4a3c1155d15a" message="#[payload]"/>
+	</flow>
+</mule>
